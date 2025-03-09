@@ -1,1 +1,4 @@
 .env
+shared/
+n8n/export/
+n8n/backup/temp/
