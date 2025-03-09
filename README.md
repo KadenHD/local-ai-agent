@@ -161,6 +161,7 @@ If you want to override the current datas in n8n for the backup ones, you can ru
 docker exec -it n8n /bin/sh /scripts/force_import_workflows_and_credentials.sh
 ```
 
+> [!CAUTION]
 > It's recommended to export your work/cred before doing this command, because you can loose all your work/cred params.
 
 ## Stop
