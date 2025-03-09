@@ -143,13 +143,60 @@ language model and Qdrant as your vector store.
 > combines robust components that work well together for proof-of-concept
 > projects. You can customize it to meet your specific needs
 
-## Upgrading
+## Export Workflows and Credentials
+
+```bash
+docker exec -it n8n /bin/sh /scripts/export_worklows_and_credentials.sh
+```
+
+Now, you can access them from local **n8n folder** in **export** sub-folder.
+
+## Import Workflows and Credentials
+
+It will be done automatically on container **n8n-import** start if there is new files in **n8n backup folder**.
+
+If you want to override the current datas in n8n for the backup ones, you can run:
+
+```bash
+docker exec -it n8n /bin/sh /scripts/force_import_workflows_and_credentials.sh
+```
+
+> It's recommended to export your work/cred before doing this command, because you can loose all your work/cred params.
+
+## Stop
 
 * ### For Nvidia GPU setups
 
 ```bash
+docker compose --profile gpu-nvidia down
+```
+
+* ### For AMD GPU / Mac / Apple Silicon users setups
+
+```bash
+docker compose --profile gpu-amd down
+```
+
+* ### For Non-GPU setups
+
+```bash
+docker compose --profile cpu down
+```
+
+## Upgrading
+
+* ### For Nvidia GPU users setups
+
+```bash
 docker compose --profile gpu-nvidia pull
 docker compose create && docker compose --profile gpu-nvidia up
+```
+
+* ### For AMD GPU users setups
+
+```bash
+docker compose --profile gpu-amd pull
+docker compose create && docker compose --profile gpu-amd up
 ```
 
 * ### For Mac / Apple Silicon users setups
@@ -159,7 +206,7 @@ docker compose pull
 docker compose create && docker compose up
 ```
 
-* ### For Non-GPU setups
+* ### For Non-GPU users setups
 
 ```bash
 docker compose --profile cpu pull

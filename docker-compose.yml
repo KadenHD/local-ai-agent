@@ -37,12 +37,14 @@ x-init-ollama: &init-ollama
   container_name: ollama-pull-llama
   volumes:
     - ollama_storage:/root/.ollama
+    - ./scripts/pull_models.sh:/scripts/pull_models.sh
   entrypoint: /bin/sh
   environment:
     - OLLAMA_HOST=ollama:11434
+    - OLLAMA_MODELS
   command:
     - "-c"
-    - "sleep 3; ollama pull llama3.2"
+    - "/bin/sh /scripts/pull_models.sh"
 
 services:
   postgres:
@@ -69,9 +71,10 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
+      - "/bin/sh /scripts/import_workflows_and_credentials.sh"
     volumes:
       - ./n8n/backup:/backup
+      - ./scripts/import_workflows_and_credentials.sh:/scripts/import_workflows_and_credentials.sh
     depends_on:
       postgres:
         condition: service_healthy
@@ -86,7 +89,10 @@ services:
     volumes:
       - n8n_storage:/home/node/.n8n
       - ./n8n/backup:/backup
+      - ./n8n/export:/export
       - ./shared:/data/shared
+      - ./scripts/export_worklows_and_credentials.sh:/scripts/export_worklows_and_credentials.sh
+      - ./scripts/force_import_workflows_and_credentials.sh:/scripts/force_import_workflows_and_credentials.sh
     depends_on:
       postgres:
         condition: service_healthy
